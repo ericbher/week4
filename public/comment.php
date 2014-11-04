@@ -88,7 +88,7 @@ try
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#">Week 4 comPair Programming</a>
+                <a class="navbar-brand" href="#">Week 4 Pair Programming</a>
             </div>
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">

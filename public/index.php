@@ -8,7 +8,7 @@ $sql = "SELECT posts.id, posts.date_created, posts.title, users.user_name, posts
 
 $sql2 = "SELECT posts.id, comments.date_created, users.user_name, comments.comment, comments.post_id 
     FROM posts LEFT JOIN comments ON comments.post_id=posts.id INNER JOIN users ON comments.author=users.id 
-    WHERE comments.approved=1 ORDER BY comments.date_created;";
+    WHERE comments.approved=1 OR comments.approved=0 ORDER BY comments.date_created;";
 $stmt = $dbo->prepare($sql);
 $comment_stmt = $dbo->prepare($sql2);
 $stmt->execute();
