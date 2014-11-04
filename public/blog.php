@@ -6,26 +6,29 @@ include_once '../sys/core/init.inc.php';
 if (isset ($_POST['submit']))
 {
 
+if (isset($_SESSION['currentuser'])){
+    $author=$_SESSION['currentuser'];
+    $authors_req="SELECT `id` FROM `users` WHERE `user_name`= :author";
+    $stmt2 = $dbo->prepare($authors_req);
+    $stmt2->bindValue(":author", $author, PDO::PARAM_STR);
+    $stmt2->execute();
+    $author_list = $stmt->fetchAll(PDO::FETCH_ASSOC); 
+    $stmt->closeCursor();
+
+} else header ('Location: ./login.php');
+
 $post = htmlentities($_POST['newPost'], ENT_QUOTES);
 $title = htmlentities($_POST['title'], ENT_QUOTES);
-$author = $_SESSION['currentuser'];
-
 $sql = "INSERT INTO `posts` (`title`, `author`, `body`) VALUES (:title, :author, :post)";
 
 try
         {
             $stmt = $dbo->prepare($sql);
-
             $stmt->bindValue(":title", $title, PDO::PARAM_STR);
             $stmt->bindValue(":author", $author, PDO::PARAM_STR);
             $stmt->bindValue(":post", $post, PDO::PARAM_STR);
-            
-
             $stmt->execute();
             $stmt->closeCursor();
-
-
-
         }
 
         catch ( Exception $e )
@@ -33,25 +36,19 @@ try
             die ( $e->getMessage() );
 
         }
-
-
-
 }
 
 ?>
 <!DOCTYPE html>
 <html lang="en">
-
-
 <head>
-
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Blog Post - Start Bootstrap Template</title>
+    <title>Simple Blog</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -87,20 +84,19 @@ try
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#">Week 4 Pair Programming</a>
+                <a class="navbar-brand" href="./index.php">Simple Blog</a>
             </div>
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
                     <li>
-                        <?php echo "<a href=\"#\">Welcome " . $_SESSION['currentuser'] . " !</a>"  ?>
-                    </li>
-                    <li>
                         <a href="blog.php">Create New Blog Entry</a>
                     </li>
-                    <li>
-                        <a href="logout.php">Logout</a>
-                    </li>
+                    <?php if (isset($_SESSION['currentuser']))
+                    echo '<li><a href="logout.php">Logout</a></li>';
+                    else echo '<li><a href="login.php">Login</a></li>';
+            
+                ?>
                 </ul>
             </div>
             <!-- /.navbar-collapse -->
@@ -118,12 +114,8 @@ try
                   <h1>New Blog Entry</h1>
 
                   <form action="<?= $_SERVER['PHP_SELF'] ?>" method="POST" class="form-group">
-
                   <input type="text" name = "title" placeholder="Title of Post" class="form-control" /><br /><br />
-
-                  <textarea name="newPost" id="post" class="form-control" rows="20" ></textarea><br />
-
-
+                  <textarea name="newPost" id="post" class="form-control" rows="14" ></textarea><br />
                   <span class="errors pull-left">
                       <?php 
                         if( isset($_POST['submit'])){
@@ -135,74 +127,14 @@ try
                                 echo "You did not enter anything.";
                             }
                         }
-
-
                       ?>
                   </span>
                   <input type="submit" class="btn btn-primary pull-right" name="submit" value="Submit">
-                  <input type="hidden" name="author" value="$_SESSION[currentuser]" />
+
 
                   </form>
 
-                  
-
-            </div>
-        
-
-         <!-- Blog Sidebar Widgets Column -->
-            <div class="col-md-4">
-
-                <!-- Blog Search Well -->
-                <div class="well">
-                    <h4>Blog Search</h4>
-                    <div class="input-group">
-                        <input type="text" class="form-control">
-                        <span class="input-group-btn">
-                            <button class="btn btn-default" type="button">
-                                <span class="glyphicon glyphicon-search"></span>
-                        </button>
-                        </span>
-                    </div>
-                    <!-- /.input-group -->
-                </div>
-
-                <!-- Blog Categories Well -->
-                <div class="well">
-                    <h4>Blog Categories</h4>
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <ul class="list-unstyled">
-                                <li><a href="#">Category Name</a>
-                                </li>
-                                <li><a href="#">Category Name</a>
-                                </li>
-                                <li><a href="#">Category Name</a>
-                                </li>
-                                <li><a href="#">Category Name</a>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="col-lg-6">
-                            <ul class="list-unstyled">
-                                <li><a href="#">Category Name</a>
-                                </li>
-                                <li><a href="#">Category Name</a>
-                                </li>
-                                <li><a href="#">Category Name</a>
-                                </li>
-                                <li><a href="#">Category Name</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <!-- /.row -->
-                </div>
-
-                <!-- Side Widget Well -->
-                <div class="well">
-                    <h4>Side Widget Well</h4>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore, perspiciatis adipisci accusamus laudantium odit aliquam repellat tempore quos aspernatur vero.</p>
-                </div>
+               </div>   
 
             </div>
 

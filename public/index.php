@@ -1,40 +1,22 @@
 <?php
 
 session_start();
-
-#if (!isset($_SESSION['currentuser'])){
-#    header ('Location: ./login.php');
-#}
-
 include_once '../sys/core/init.inc.php';
 
-$sql = "SELECT posts.id, posts.date_created, posts.title, users.user_name, posts.body FROM posts INNER JOIN users ON posts.author=users.id ORDER BY posts.date_created DESC";
+$sql = "SELECT posts.id, posts.date_created, posts.title, users.user_name, posts.body 
+    FROM posts INNER JOIN users ON posts.author=users.id ORDER BY posts.date_created DESC";
 
-$sql2 = "SELECT posts.id, comments.date_created, users.user_name, comments.comment, comments.post_id FROM posts LEFT JOIN comments ON comments.post_id=posts.id INNER JOIN users ON comments.author=users.id WHERE comments.approved=1 ORDER BY comments.date_created;";
-
-
+$sql2 = "SELECT posts.id, comments.date_created, users.user_name, comments.comment, comments.post_id 
+    FROM posts LEFT JOIN comments ON comments.post_id=posts.id INNER JOIN users ON comments.author=users.id 
+    WHERE comments.approved=1 ORDER BY comments.date_created;";
 $stmt = $dbo->prepare($sql);
 $comment_stmt = $dbo->prepare($sql2);
-
-
-
-
 $stmt->execute();
 $comment_stmt->execute();
-
-
 $results = $stmt->fetchAll(PDO::FETCH_ASSOC); //this grabs each row and returns it as an associative array
 $comment_results = $comment_stmt->fetchAll(PDO::FETCH_ASSOC);
-
-
-
-
 $stmt->closeCursor();
 $comment_stmt->closeCursor();
-
-
-
-
 ?>
 
 <!DOCTYPE html>
@@ -78,21 +60,21 @@ $comment_stmt->closeCursor();
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#">Week 4 Pair Programming</a>
+                <a class="navbar-brand" href="#">Simple Blog</a>
             </div>
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
-                     <li>
-                        <?php if (isset($_SESSION['currentuser'])) echo "<a href=\"#\">Welcome " . $_SESSION['currentuser'] . " !</a>"  ?>
-                    <li>
+                    
                     <li>
                         <a href="blog.php">Create New Blog Entry</a>
                     </li>
+                     <?php if (isset($_SESSION['currentuser']))
+                    echo '<li><a href="logout.php">Logout</a></li>';
+                    else echo '<li><a href="login.php">Login</a></li>';
+            
+                ?>
                    
-                    <li>
-                        <a href="logout.php">Logout</a>
-                    </li>
                 </ul>
             </div>
             <!-- /.navbar-collapse -->
@@ -102,8 +84,6 @@ $comment_stmt->closeCursor();
 
     <!-- Page Content -->
     <div class="container">
-
-        <div class="row">
 
                 <!-- Blog Post -->
                 <?php
@@ -128,14 +108,8 @@ $comment_stmt->closeCursor();
             }
             echo "<hr><row></row>";
         }
-                
-                
-            
-
+        echo '<row><div><a class="btn btn-warning pull-right" href="./comment.php" role="button">Add a Comment</a></div></row>';
 ?>                
-
-          </div>
-
     </div>
 
 <?php include_once 'assets/common/footer.inc.php'; ?>

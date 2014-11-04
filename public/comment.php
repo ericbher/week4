@@ -22,9 +22,6 @@ $stmt->execute();
 $post_list = $stmt->fetchAll(PDO::FETCH_ASSOC); 
 $stmt->closeCursor();
 
-var_dump($_POST);
-
-
 #prepare the new comment for entry
 
 if (isset ($_POST['submit']))
@@ -50,8 +47,9 @@ try
             die ( $e->getMessage() );
 
         }
+        header ('Location: ./');
 }
-header ('Location: ./');
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -103,9 +101,11 @@ header ('Location: ./');
                     <li>
                         <a href="blog.php">Add a Comment</a>
                     </li>
-                    <li>
-                        <a href="logout.php">Logout</a>
-                    </li>
+                    <?php if (isset($_SESSION['currentuser']))
+                    echo '<li><a href="logout.php">Logout</a></li>';
+                    else echo '<li><a href="login.php">Login</a></li>';
+            
+                ?>
                 </ul>
             </div>
             <!-- /.navbar-collapse -->
@@ -130,7 +130,7 @@ header ('Location: ./');
 	<?php endforeach ?>
                	</select>
 </p>
-                  <textarea name="comment" id="post" class="form-control" rows="20" ></textarea><br />
+                  <textarea name="comment" id="post" class="form-control" rows="10" ></textarea><br />
 
 
                   <span class="errors pull-left">
@@ -149,7 +149,7 @@ header ('Location: ./');
                       ?>
                   </span>
                   <input type="submit" class="btn btn-primary pull-right" name="submit" value="Submit">
-          
+ 				
 
                   </form>
 
