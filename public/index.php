@@ -2,9 +2,9 @@
 
 session_start();
 
-if (!isset($_SESSION['currentuser'])){
-    header ('Location: ./login.php');
-}
+#if (!isset($_SESSION['currentuser'])){
+#    header ('Location: ./login.php');
+#}
 
 include_once '../sys/core/init.inc.php';
 
@@ -84,7 +84,7 @@ $comment_stmt->closeCursor();
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
                      <li>
-                        <?php echo "<a href=\"#\">Welcome " . $_SESSION['currentuser'] . " !</a>"  ?>
+                        <?php if (isset($_SESSION['currentuser'])) echo "<a href=\"#\">Welcome " . $_SESSION['currentuser'] . " !</a>"  ?>
                     <li>
                     <li>
                         <a href="blog.php">Create New Blog Entry</a>
@@ -105,79 +105,37 @@ $comment_stmt->closeCursor();
 
         <div class="row">
 
-            <!-- Blog Post Content Column -->
-            <div class="col-lg-8">
-
                 <!-- Blog Post -->
                 <?php
                 foreach ($results as $posts){
                 
                 $date = date('F d Y H:i:s', strtotime($posts['date_created']));
-                echo "<h1>" . $posts['title'] . "</h1>";
-                echo "<p class=\"lead\">
-                    by " . $posts['user_name'] . "</p>";
-                echo "<hr>";   
-                echo "<p><span class=\"glyphicon glyphicon-time\"></span> Posted on " . $date . "</p>";
+                echo "<row>";
+                echo "<h1>" . $posts['title'] . "<small> by " . $posts['user_name'] . " <span class=\"glyphicon glyphicon-time\"></span> Posted on " . $date . "</small></h1>";
                 echo "<hr>";
-                echo "<hr>";
-                echo "<p>" . $posts['body'] . "</p>";
-                echo "<hr>";
+                echo "<h4>" . $posts['body'] . "</h4>";
+                echo "<hr></row>";
+            
 
                 foreach ($comment_results as $comment){
                  if ($comment['post_id'] == $posts['id']) {
-                    echo "<div class=\"media\">";
-                    echo "<div class=\"media-body\">";
-                    echo "<h4 class=\"media-heading\">";
+                    echo "<row>";
+                    echo "<div class='col-md-offset-2 col-md-10'>";
                     echo "<small>Created on " . $comment['date_created'] . " by " . $comment['user_name'] . "</small>";
-                    echo "<h4>" . $comment['comment'] . "</h4>";
-                    echo "</div></div>";
+                    echo "<p>" . $comment['comment'] . "</p>";
+                    echo "</div></row>";
                 }
-                
-                
             }
-
-
-
-//                 echo <<<COMMENT_FORM
-
-//                    <div class="well">
-//                     <h4>Leave a Comment:</h4>
-//                     <form role="form" action="comment.php" method="post">
-//                         <div class="form-group">
-//                             <textarea class="form-control" rows="3"></textarea>
-//                             <in
-//                         </div>
-//                         <button type="submit" class="btn btn-primary">Submit</button>
-//                     </form>
-//                 </div>
-
-//                 <hr>
-// COMMENT_FORM;
-
-            }
-        
-
-                ?>
-
-                <!-- Blog Comments -->
-
-                <!-- Comments Form -->
-             
-
-                <!-- Posted Comments -->
-
-                <!-- Comment -->
+            echo "<hr><row></row>";
+        }
                 
+                
+            
 
-            </div>
-        </div>
+?>                
+
+          </div>
 
     </div>
 
-               
-           
-
-
-<?php     
-include_once 'assets/common/footer.inc.php';
-?>
+<?php include_once 'assets/common/footer.inc.php'; ?>
