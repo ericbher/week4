@@ -5,12 +5,10 @@ include_once '../sys/core/init.inc.php';
 
 if (isset($_SESSION['currentuser'])){
     $author=$_SESSION['currentuser'];
-    $authors_req="SELECT `id` FROM `users` WHERE `user_name`= :author";
-	$stmt2 = $dbo->prepare($authors_req);
-	$stmt2->bindValue(":author", $author, PDO::PARAM_STR);
-	$stmt2->execute();
-	$author_list = $stmt->fetchAll(PDO::FETCH_ASSOC); 
-	$stmt->closeCursor();
+    $authors_req="SELECT `id` FROM `users` WHERE `user_name`= \"$author\"";
+    $stmt2 = $dbo->query($authors_req);
+    $results = $stmt2->fetchAll(PDO::FETCH_NUM);
+    $author = $results[0][0];
 
 }
 else $author=3;

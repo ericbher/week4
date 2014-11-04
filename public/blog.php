@@ -8,14 +8,13 @@ if (isset ($_POST['submit']))
 
 if (isset($_SESSION['currentuser'])){
     $author=$_SESSION['currentuser'];
-    $authors_req="SELECT `id` FROM `users` WHERE `user_name`= :author";
-    $stmt2 = $dbo->prepare($authors_req);
-    $stmt2->bindValue(":author", $author, PDO::PARAM_STR);
-    $stmt2->execute();
-    $author_list = $stmt->fetchAll(PDO::FETCH_ASSOC); 
-    $stmt->closeCursor();
-
-} else header ('Location: ./login.php');
+    $authors_req="SELECT `id` FROM `users` WHERE `user_name`= \"$author\"";
+    $stmt2 = $dbo->query($authors_req);
+    $results = $stmt2->fetchAll(PDO::FETCH_NUM);
+    $author = $results[0][0];
+    header ('Location: ./index.php');
+}
+ else header ('Location: ./login.php');
 
 $post = htmlentities($_POST['newPost'], ENT_QUOTES);
 $title = htmlentities($_POST['title'], ENT_QUOTES);
@@ -36,7 +35,8 @@ try
             die ( $e->getMessage() );
 
         }
-}
+    }
+
 
 ?>
 <!DOCTYPE html>
