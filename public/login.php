@@ -2,6 +2,8 @@
 
 session_start();
 
+
+
 //Passwords are as follows for Eric and Marina respectively: cX7jEhDE, sqAwkdnC
 
 $users = ['Eric' => '8e324223ddbf08e6bcd22076723fbab9', 'Marina' => 'fde966f5590f51d92d7c45f46b962061'];
@@ -121,7 +123,7 @@ $_SESSION['currentuser'] = $username;
                     
                     <div class="form-group">
                     <label for="username">Username</label>
-                    <input type="text" id="username" name="user" class="form-control" />
+                    <input type="text" id="username" name="user" class="form-control"  />
                     </div>
 
                     <div class="form-group">
@@ -148,6 +150,15 @@ $_SESSION['currentuser'] = $username;
     <div class="container">
 
             <div class="col-lg-12">
+
+                <?php 
+                if ( isset($_SESSION['currentuser']) ){
+                    echo "<h3>You are already logged in.</h3>";
+
+                }
+
+                ?>
+
 
             <a href = "signup.php"><input type="button" class="btn btn-success center-block btn-lg" name="signup" value= "Sign Up" /></a>
 
