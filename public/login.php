@@ -6,9 +6,24 @@ session_start();
 
 //Passwords are as follows for Eric and Marina respectively: cX7jEhDE, sqAwkdnC
 
-$users = ['Eric' => '8e324223ddbf08e6bcd22076723fbab9', 'Marina' => 'fde966f5590f51d92d7c45f46b962061'];
 
 include_once '../sys/core/init.inc.php';
+
+$sql = "SELECT `user_name`, `password` FROM users"; 
+
+$stmt = $dbo->query($sql);
+$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// var_dump($results);
+$usernames = array_column($results, 'user_name');
+$passwords = array_column($results, 'password');
+
+
+
+
+
+
+
 
 if ( isset($_POST['submit']) ){
 
@@ -16,42 +31,18 @@ if ( isset($_POST['submit']) ){
 $username = $_POST['user'];
 $password = $_POST['pass'];
 
+$hash = sha1($password);
 
 
 
 
-// $sanEmail=filter_var($username,FILTER_SANITIZE_EMAIL);
-// $valEmail=filter_var($sanEmail,FILTER_VALIDATE_EMAIL);
-
-
-// $firstName = stristr($username, "@codervox.com", true);
-// $uppercase = strtoupper($firstName);
-
-$_SESSION['currentuser'] = $username;
-
-
-    if(array_key_exists($username, $users ))
-    {
-        if ( md5($password) == $users[$username] )
-        {
-            header ('Location: ./');
-        } else {
-            echo "<h3>Your password did not match.</h3>";
-        }
-       
-    } else {
-        echo "<h3>That username does not exist.</h3>";
-    }
-    
-       
-
-
-   
-
-
-
+if ( in_array($username, $usernames) ) {
+    if ( in_array($hash, $passwords)) {
+        $_SESSION['currentuser'] = $username;
+        header ('Location: ./index.php');
+    } else { echo "<h3>Invalid password.</h3><br/>"; }
+} else { echo "<h3>Invalid username.</h3><br/>"; }
 }
-
 
 ?>
 

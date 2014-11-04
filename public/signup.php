@@ -96,6 +96,13 @@ if ( isset($_POST['signup']) )
 					$username = $_POST['user'];
 					$email = $_POST['email'];
 
+					$query = "SELECT `user_name` FROM users WHERE `user_name` ='" .$username."'";
+					$usercheck = $dbo->query($query);
+					$row_count = $usercheck->rowCount();
+					$validusername = false; 
+
+
+
 					$_SESSION['currentuser'] = $username;
 
 					$sql = "INSERT INTO `users` (`user_name`, `email`, `password`) VALUES (:user, :email, :password)";
@@ -109,6 +116,10 @@ if ( isset($_POST['signup']) )
 						if ($pass1 == $pass2)
 						{
 							$hash = sha1($pass1);
+
+							if ( $row_count == 0 )
+							{
+								$validusername = true;
 							try
         						{
             						$stmt = $dbo->prepare($sql);
@@ -128,7 +139,7 @@ if ( isset($_POST['signup']) )
             						die ( $e->getMessage() );
 
         						}
-
+        					} else { echo "That username already exists. <br />"; }
 						} else { echo "Your passwords did not match. <br />"; }
 					} else { echo "You did not enter a valid e-mail. <br/>"; }
 						
