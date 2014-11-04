@@ -2,9 +2,9 @@
 
 session_start();
 
-if (!isset($_SESSION['currentuser'])){
-    header ('Location: ./login.php');
-}
+#if (!isset($_SESSION['currentuser'])){
+#    header ('Location: ./login.php');
+#}
 
 include_once '../sys/core/init.inc.php';
 
@@ -84,7 +84,7 @@ $comment_stmt->closeCursor();
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
                      <li>
-                        <?php echo "<a href=\"#\">Welcome " . $_SESSION['currentuser'] . " !</a>"  ?>
+                        <?php if (isset($_SESSION['currentuser'])) echo "<a href=\"#\">Welcome " . $_SESSION['currentuser'] . " !</a>"  ?>
                     <li>
                     <li>
                         <a href="blog.php">Create New Blog Entry</a>
@@ -113,12 +113,8 @@ $comment_stmt->closeCursor();
                 foreach ($results as $posts){
                 
                 $date = date('F d Y H:i:s', strtotime($posts['date_created']));
-                echo "<h1>" . $posts['title'] . "</h1>";
-                echo "<p class=\"lead\">
-                    by " . $posts['user_name'] . "</p>";
-                echo "<hr>";   
+                echo "<h1>" . $posts['title'] . "<small> by " . $posts['user_name'] . "</small></h1>";
                 echo "<p><span class=\"glyphicon glyphicon-time\"></span> Posted on " . $date . "</p>";
-                echo "<hr>";
                 echo "<hr>";
                 echo "<p>" . $posts['body'] . "</p>";
                 echo "<hr>";
